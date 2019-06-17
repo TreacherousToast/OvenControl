@@ -5,7 +5,7 @@
 #include "Adafruit_MAX31855.h"
 
 // don't change these
-#define MAXDO   3
+#define MAXDO   3 // pins that the thermocouple amplifier connects to on the Arduino, if you need to reconnect it
 #define MAXCS   4
 #define MAXCLK  5
 
