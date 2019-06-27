@@ -1,11 +1,8 @@
-// When I tested this with the toaster oven, it was accurate to +-5C.
-// It initially got to 10C greater than target temp (100C), but then stabilized between 105C and 95C.
-
 #include <SPI.h>
 #include "Adafruit_MAX31855.h"
 
 // don't change these
-#define MAXDO   3 // pins that the thermocouple amplifier connects to on the Arduino, if you need to reconnect it
+#define MAXDO   3
 #define MAXCS   4
 #define MAXCLK  5
 
@@ -26,36 +23,35 @@ void setup()
   Serial.println("MAX31855 test");
   delay(500);
   
-  pinMode(8,OUTPUT); // setting pin 8 as the relay control pin
+  pinMode(8,OUTPUT);
 }
 
 void loop() 
 {
-  double c = thermocouple.readCelsius(); // reads thermocouple temp sent by the chip over SPI
+  double c = thermocouple.readCelsius();
   
   if (isnan(c)) 
   {
     Serial.println("Thermocouple error");
+    digitalWrite(8,LOW); // heating elements power down by default if thermocouple breaks, to prevent thermal runaway and/or a fire
   } 
   else 
   {
      Serial.println(c);
   }
   
-  if (c < targetTemp && currTime < targetTime) // basically saying if the temperature is less than the target temperature, turn on relay
+  if (c < targetTemp && currTime < targetTime)
   {
     digitalWrite(8,HIGH);
   }
-  else // if the temperature is greater than the target temperature, turn off the relay
+  else
   {
     digitalWrite(8,LOW);
     started = true;
   }
   
   // timing stuff
-  /* disabling this all now because the Arduino isn't very accurate at keeping time, so I don't want it to be thought of as accurate.
-    if you want to enable it, just uncomment out this code.
-    
+  /* // disabling this all now because the Arduino isn't very accurate at keeping time, so I don't want it to be thought of as accurate
   delay(delayTime);
   if (started == true)
   {
